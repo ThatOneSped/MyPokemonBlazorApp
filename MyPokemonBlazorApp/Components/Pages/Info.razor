@@ -1,0 +1,67 @@
+﻿@page "/Info/{id:int}"
+@inject DatabaseContext DbContext
+@inject PokemonImageGrabber ImageGrabber
+
+<h3>Info</h3>
+
+@if (pokemon is not null)
+{
+        <p>@pokemon?.Name</p>
+}
+else
+{
+        <p>No pokemon found for that Id</p>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private string? imageURL { get; set; }
+
+    private Pokemon pokemon;
+
+    protected override void OnInitialized()
+    {
+        pokemon = DbContext.Pokemons.SingleOrDefault(p => p.Id == Id);
+
+        imageURL = ImageGrabber.GetImageUrl(pokemon);
+    }
+}
+
+
+<img src="@imageURL" onerror="this.onerror=null;this.src='/img/notfound.png';" class="img-fluid img-thumbnail rounded-start" alt="@pokemon.Name" style="" />
+
+<spam>Total</spam>
+<div class="progress" style="height: 50px;">
+    <div class="progress-bar" role="progressbar" style="width: @(pokemon.Total*100/780)%" aria-valuenow="@pokemon.Total" aria-valuemin="1" aria-valuemax="780">@pokemon.Total / 780</div>
+</div>
+
+<br />
+
+<spam>HP</spam>
+<div class="progress" style="height: 50px;">
+    <div class="progress-bar" role="progressbar" style="width: @(pokemon.HP*100/255)%" aria-valuenow="@pokemon.HP" aria-valuemin="1" aria-valuemax="255">@pokemon.HP / 255</div>
+</div>
+
+<br />
+
+<spam>Attack</spam>
+<div class="progress" style="height: 50px;">
+    <div class="progress-bar" role="progressbar" style="width: @(pokemon.Attack*100/255)%" aria-valuenow="@pokemon.Attack" aria-valuemin="0" aria-valuemax="255">@pokemon.Attack / 255</div>
+</div>
+
+<br />
+
+<spam>Defence</spam>
+<div class="progress" style="height: 50px;">
+    <div class="progress-bar" role="progressbar" style="width: @(pokemon.Defence*100/255)%" aria-valuenow="@pokemon.Defence" aria-valuemin="0" aria-valuemax="255">@pokemon.Defence / 255</div>
+</div>
+
+<br />
+
+<spam>Speed</spam>
+<div class="progress" style="height: 50px;">
+    <div class="progress-bar" role="progressbar" style="width: @(pokemon.Speed*100/255)%" aria-valuenow="@pokemon.Speed" aria-valuemin="0" aria-valuemax="255">@pokemon.Speed / 255</div>
+</div>
+

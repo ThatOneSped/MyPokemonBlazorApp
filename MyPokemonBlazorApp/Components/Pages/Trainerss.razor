@@ -1,0 +1,98 @@
+﻿@page "/Trainers"
+@rendermode InteractiveServer
+@inject DatabaseContext DbContext
+
+<PageTitle>Trainers</PageTitle>
+
+<div class="row g-0">
+    <div class="col-md-12">
+        <button class="btn btn-primary float-end"
+            Add Trainer
+        </button>
+    </div>
+</div>
+
+<div class="card">
+        <div class="card-body bg-light">
+            <h4 class="card-title"></h4>
+        </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var trainer in trainers)
+        {
+            <tr>
+                <td>@trainer.Id</td>
+                <td>@trainer.Name</td>
+
+                <td>
+                    <button class="btn btn-success" @onclick="() => Edit(trainer)">Edit</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" @onclick="() => Delete(trainer)">Delete</button>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Trainer>? Trainers;
+    private EditContext editContext;
+    private Trainer model;
+    private bool showForm;
+
+
+    private void Edit(Trainer trainer)
+    {
+        model = trainer;
+        editContext = new EditContext(model);
+        showForm = true;
+    }
+
+    private async Task Submit()
+    {
+        if (model.Id == 0)
+            DbContext.Trainers.Add(model);
+        else
+            DbContext.Trainers.Update(model);
+
+        await DbContext.SaveChangesAsync();
+        await Refresh();
+    }
+
+
+    private async Task Refresh()
+    {
+        model = new Trainer();
+        editContext = new EditContext(model);
+        trainers = await DbContext.Trainers.ToListAsync();
+    }
+
+    private async Task Delete(Trainer trainer)
+    {
+        DbContext.Trainers.Remove(trainer);
+        await DbContext.SaveChangesAsync();
+        await Refresh();
+    }
+}
+
+
+
+@code {
+    private List<Trainer> trainers;
+    protected async override Task OnInitializedAsync()
+    {
+        trainers = await DbContext.Trainers.Include(t => t.Companion).ToListAsync();
+    }
+}
