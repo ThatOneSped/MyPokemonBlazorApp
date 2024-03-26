@@ -1,16 +1,18 @@
 ﻿@page "/Trainers"
 @rendermode InteractiveServer
 @inject DatabaseContext DbContext
+@inject NavigationManager NavigationManager
 
 <PageTitle>Trainers</PageTitle>
 
 <div class="row g-0">
     <div class="col-md-12">
-        <button class="btn btn-primary float-end"
+        <button class="btn btn-primary float-end">
             Add Trainer
         </button>
     </div>
 </div>
+
 
 <div class="card">
         <div class="card-body bg-light">
