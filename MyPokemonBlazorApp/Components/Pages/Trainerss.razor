@@ -24,11 +24,14 @@
                 <div class="col-md-3">
                     <label for="name" class="form-label">Name</label>
                     <InputText class="form-control" placeholder="Name" @bind-Value="model.Name" />
-                    <ValidationMessage For="@(() => model.Name)" />
                 </div>
                 <div class="col-md-3">
                     <label for="companion" class="form-label">Companion</label>
-                    <InputText class="form-control" placeholder="Companion" @bind-Value="model.Companion" />
+                    <InputText class="form-control" placeholder="Companion" @bind-value="companionId" />
+                    @foreach (var pokemon in pokemons)
+                    {
+                        <option value="@pokemon.Id">@pokemon.Name</option>
+                    }
                 </div>
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary float-end">
@@ -62,7 +65,7 @@
             <tr>
                 <td>@trainer.Id</td>
                 <td>@trainer.Name</td>
-                <td>@trainer.Companion</td>
+                <td>@trainer.Companion.Name</td>
 
                 <td>
                     <button class="btn btn-success" @onclick="() => Edit(trainer)">Edit</button>
@@ -77,10 +80,13 @@
 </table>
 
 @code {
+    private Trainer? trainer;
     private List<Trainer>? Trainers;
     private EditContext editContext;
     private Trainer model;
     private bool showForm;
+    private List<Pokemon> pokemons;
+    private int companionId;
 
 
     private void Edit(Trainer trainer)
