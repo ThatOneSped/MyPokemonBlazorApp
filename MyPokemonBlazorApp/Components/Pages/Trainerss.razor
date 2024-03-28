@@ -7,7 +7,7 @@
 
 <div class="row g-0">
     <div class="col-md-12">
-        <button class="btn btn-primary float-end" @onclick="ShowAddTrainer">
+        <button class="btn btn-primary float-end" @onclick="showForm">
             Add Pokemon
         </button>
     </div>
@@ -20,25 +20,35 @@
             <h4 class="card-title">
                 @(model.Id == 0 ? "Add Trainer" : "Edit Trainer")
             </h4>
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label for="name" class="form-label">Name</label>
-                    <InputText class="form-control" placeholder="Name" @bind-Value="model.Name" />
+            <EditForm OnValidSubmit="Submit" EditContext="editContext">
+                <DataAnnotationsValidator />
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="name" class="form-label">Name</label>
+                        <InputText class="form-control" placeholder="Name" @bind-Value="model.Name" />
+                        <ValidationMessage For="@(() => model.Name)" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="type" class="form-label">Companion</label>
+                        <InputSelect class="form-select" placeholder="Companion" @bind-Value="companionId">
+                            @foreach (var pokemon in pokemons)
+                            {
+                                <option value="@pokemon.Id">@pokemon.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => model.Companion)" />
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary float-end">
+                            @(model.Id == 0 ? "Add Trainer" : "Edit Trainer")
+                        </button>
+                    </div>
+
                 </div>
-                <div class="col-md-3">
-                    <label for="companion" class="form-label">Companion</label>
-                    <InputText class="form-control" placeholder="Companion" @bind-value="companionId" />
-                    @foreach (var pokemon in pokemons)
-                    {
-                        <option value="@pokemon.Id">@pokemon.Name</option>
-                    }
-                </div>
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary float-end">
-                        @(model.Id == 0 ? "Add Trainer" : "Edit Trainer")
-                    </button>
-                </div>
-            </div>
+            </EditForm>
         </div>
     </div>
 }
